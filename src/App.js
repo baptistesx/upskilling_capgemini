@@ -1,3 +1,4 @@
+import { Typography } from "@material-ui/core";
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -5,14 +6,30 @@ import {
   Route,
   Link,
   useRouteMatch,
-  useParams
+  useParams,
 } from "react-router-dom";
+import HomePage from "./views/HomePage";
+import AdminPage from "./views/HomePage";
+import ArticlePage from "./views/HomePage";
+import { makeStyles } from "@material-ui/core/styles";
+import BlogTitle from "./components/BlogTitle";
+
+const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+});
 
 export default function App() {
+  const classes = useStyles();
+
   return (
     <Router>
-      <div>
-        <ul>
+      <div className={classes.root}>
+        {/* <ul>
           <li>
             <Link to="/">Home</Link>
           </li>
@@ -22,17 +39,20 @@ export default function App() {
           <li>
             <Link to="/topics">Topics</Link>
           </li>
-        </ul>
+        </ul> */}
+        <BlogTitle title="My blog" />
 
         <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/topics">
-            <Topics />
-          </Route>
           <Route path="/">
-            <Home />
+            <HomePage />
+          </Route>
+
+          <Route path="/admin">
+            <AdminPage />
+          </Route>
+
+          <Route path="/article">
+            <ArticlePage />
           </Route>
         </Switch>
       </div>
@@ -60,9 +80,7 @@ function Topics() {
           <Link to={`${match.url}/components`}>Components</Link>
         </li>
         <li>
-          <Link to={`${match.url}/props-v-state`}>
-            Props v. State
-          </Link>
+          <Link to={`${match.url}/props-v-state`}>Props v. State</Link>
         </li>
       </ul>
 
