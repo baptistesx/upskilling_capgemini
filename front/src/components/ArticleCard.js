@@ -1,10 +1,11 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import NavBar from "../components/NavBar";
+// import NavBar from "../components/NavBar";
 import { Card, Grid } from "@material-ui/core";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import { Typography, Button } from "@material-ui/core";
+import { Link, useHistory, useRouteMatch, useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,8 +19,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ArticleCard(props) {
+const ArticleCard = ({article}) => {
   const classes = useStyles();
+  const history = useHistory();
+  
+  const handleLinkClick = () => {
+    history.push("/articles/" + article.id);
+  };
 
   return (
     <Card className={classes.root} variant="outlined">
@@ -27,24 +33,26 @@ function ArticleCard(props) {
         <Grid container className={classes.grid}>
           <Grid item>
             <Typography variant="h5" component="h2">
-              {props.title}
+              {article.title}
             </Typography>
             <Typography className={classes.pos} color="textSecondary">
-              {props.subTitle}
+              {article.subTitle}
             </Typography>
           </Grid>
           <Grid item className={classes.body}>
             <Typography variant="body2" component="p">
-              {props.body}
+              {article.body}
             </Typography>
           </Grid>
         </Grid>
         <CardActions style={{ justifyContent: "right" }}>
-          <Button size="small">Lire l'article</Button>
+          <Link to={`/articles/${article.id}`}>Components</Link>
+
+          {/* <Link to={`${match.url}/articles/${props.id}`}>Lire l'article</Link> */}
         </CardActions>
       </CardContent>
     </Card>
   );
-}
+};
 
 export default ArticleCard;
