@@ -1,11 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import NavBar from "../components/NavBar";
-import { Card, Grid } from "@material-ui/core";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import { Typography, Button } from "@material-ui/core";
-import Article from "../components/ArticleCard";
+import { Typography } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     // display: "flex",

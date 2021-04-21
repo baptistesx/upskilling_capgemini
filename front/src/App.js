@@ -23,15 +23,11 @@ export default function App() {
         <NavBar />
 
         <Switch>
-          <Route path="/admin">
-            <AdminPage />
-          </Route>
-
-          <Route path="/articles/:articleId">
+          <Route path="/articles/:articleId/:isAdmin">
             <ArticlePage />
           </Route>
 
-          <Route path="/">
+          <Route path="/:isAdmin">
             <HomePage />
           </Route>
         </Switch>
