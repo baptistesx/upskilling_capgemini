@@ -12,6 +12,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Formik } from "formik";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -29,7 +32,7 @@ const ArticleComment = (commentReceived) => {
     <Card>
       <CardContent>
         <Typography>{comment.author}</Typography>
-        <Typography>{comment.date}</Typography>
+        <Typography>{comment.createdAt}</Typography>
         <Typography>{comment.body}</Typography>
       </CardContent>
     </Card>
@@ -54,7 +57,15 @@ const ArticlePage = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, [articleId]);
+  }, [articleId, isLoading]);
+
+  const addComment = async (values) => {
+    const response = await axios.post(
+      `http://127.0.0.1:6868/articles/${articleId}/comment`,
+      values
+    );
+    console.log(response);
+  };
 
   return (
     <div className={classes.root}>
@@ -64,18 +75,23 @@ const ArticlePage = () => {
         <div>
           <Typography variant="h2">{article.title}</Typography>
           <Typography variant="h3">{article.subTitle}</Typography>
-          <Typography variant="h5">{article.date}</Typography>
+          <Typography variant="h3">{article.author}</Typography>
+          <Typography variant="h5">
+            {format(new Date(article.createdAt), "'Le' PPP à H:m", {
+              locale: fr,
+            })}
+          </Typography>
           <Typography variant="body1">{article.body}</Typography>
           <Typography variant="h3">Commentaires</Typography>
           <Typography variant="h3">Ajouter un commentaire</Typography>
           {/* <Typography variant="h3">{article.comments[0].author}</Typography> */}
           <Formik
-            initialValues={{ pseudo: "", comment: "" }}
+            initialValues={{ author: "", comment: "" }}
             validate={(values) => {
               const errors = {};
 
-              if (!values.pseudo) {
-                errors.pseudo = "Veuillez entrer votre pseudo";
+              if (!values.author) {
+                errors.author = "Veuillez entrer votre pseudo";
               }
 
               if (!values.comment) {
@@ -84,12 +100,19 @@ const ArticlePage = () => {
 
               return errors;
             }}
-            onSubmit={(values, { setSubmitting }) => {
-              setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              console.log(values);
+              setIsLoading(true);
 
+              addComment(values).then((response) => {
+                // const newArticlesList = articlesList.slice();
+                // newArticlesList.push();
+                // console.log("newwww", newArticlesList);
+                // setArticlesList(newArticlesList);
+                setIsLoading(false);
+                resetForm({ author: "", comment: "" });
                 setSubmitting(false);
-              }, 400);
+              });
             }}
           >
             {({
@@ -106,17 +129,17 @@ const ArticlePage = () => {
                 <Box display="flex" flexDirection="column">
                   <TextField
                     variant="outlined"
-                    type="pseudo"
-                    name="pseudo"
+                    type="text"
+                    name="author"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.pseudo}
+                    value={values.author}
                     label="Pseudo"
                   />
-                  {errors.pseudo && touched.pseudo && errors.pseudo}
+                  {errors.author && touched.author && errors.author}
                   <TextField
                     variant="outlined"
-                    type="comment"
+                    type="text"
                     name="comment"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -126,9 +149,13 @@ const ArticlePage = () => {
                     rows={4}
                   />
                   {errors.comment && touched.comment && errors.comment}
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    onSubmit={handleSubmit}
+                  >
                     Commenter
-                  </Button>{" "}
+                  </Button>
                 </Box>
               </form>
             )}

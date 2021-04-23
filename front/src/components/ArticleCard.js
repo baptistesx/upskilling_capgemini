@@ -9,19 +9,23 @@ import { Link, useHistory, useRouteMatch, useParams } from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { IconButton } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
+import axios from "axios";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "450px",
     margin: "20px",
   },
-  grid: { display: "flex", flexDirection: "row", padding: "10px" },
+  grid: { display: "flex", flexDirection: "column", padding: "10px" },
   body: {
     height: "40px",
     overflow: "hidden",
   },
 }));
 
-const ArticleCard = ({ article }) => {
+const ArticleCard = ({ article, onDelete }) => {
   const classes = useStyles();
   const history = useHistory();
   const { isAdmin } = useParams();
@@ -40,18 +44,20 @@ const ArticleCard = ({ article }) => {
             <Typography variant="h5" component="h2">
               {article.title} {isAdminBool}
               {isAdminBool ? (
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
-              ) : null}
-              {isAdminBool ? (
-                <IconButton>
+                <IconButton onClick={() => onDelete(article.articleId)}>
                   <DeleteIcon />
                 </IconButton>
               ) : null}
             </Typography>
+
             <Typography className={classes.pos} color="textSecondary">
               {article.subTitle}
+            </Typography>
+
+            <Typography className={classes.pos} color="textSecondary">
+              {format(new Date(article.createdAt), "'Le' PPP à H:m", {
+                locale: fr,
+              })}
             </Typography>
           </Grid>
           <Grid item className={classes.body}>

@@ -3,7 +3,7 @@ exports.up = function (knex) {
     tbl.increments("commentId").primary().unsigned();
     tbl.integer("articleId").notNullable();
     tbl.text("author", 128).notNullable();
-    tbl.text("date", 128).notNullable();
+    tbl.timestamp("createdAt", { useTz: true }).defaultTo(knex.fn.now());
     tbl.text("body", 128).notNullable();
   });
 };

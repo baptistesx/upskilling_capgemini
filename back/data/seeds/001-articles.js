@@ -7,7 +7,7 @@ exports.seed = function (knex) {
       return knex("articles").insert([
         {
           articleId: 1,
-          date: "03/05/2021",
+          createdAt: "03/05/2021",
           title: "titre1",
           subTitle: "sous titre",
           body:
@@ -16,7 +16,7 @@ exports.seed = function (knex) {
         },
         {
           articleId: 2,
-          date: "03/05/2021",
+          createdAt: "03/05/2021",
           title: "titre2",
           subTitle: "sous titre",
           body:
